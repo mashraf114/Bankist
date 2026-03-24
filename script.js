@@ -80,11 +80,11 @@ const displayMovements = function (movements) {
   });
 };
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce(function (acc, mov) {
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce(function (acc, mov) {
     return (acc += mov);
   });
-  labelBalance.textContent = `${balance}€`;
+  labelBalance.textContent = `${acc.balance}€`;
 };
 
 const calcDisplaySummery = function (acc) {
@@ -120,6 +120,12 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
+const updateUI = function (acc) {
+  displayMovements(acc.movements);
+  calcDisplayBalance(acc);
+  calcDisplaySummery(acc);
+};
+
 // event handlers
 let currentAccount;
 btnLogin.addEventListener('click', function (e) {
@@ -134,23 +140,40 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
-
     // clear Input fields
-
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginUsername.blur();
     inputLoginPin.blur();
-    //display movements
-    displayMovements(currentAccount.movements);
-
-    //display balance
-    calcDisplayBalance(currentAccount.movements);
-
-    //display summary
-    calcDisplaySummery(currentAccount);
+    updateUI(currentAccount);
   }
 });
 
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const recieverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (
+    amount > 0 &&
+    recieverAcc &&
+    currentAccount.balance >= amount &&
+    recieverAcc?.username !== currentAccount.username
+  ) {
+    console.log('Transfer Valid!');
+    // currentAccount.balance -= amount;
+    currentAccount.movements.push(-amount);
+
+    // recieverAcc.balance += amount;
+    recieverAcc.movements.push(amount);
+
+    updateUI(currentAccount);
+  } else {
+    console.log('Transfer invalid!');
+  }
+});
 // console.log(accounts);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
