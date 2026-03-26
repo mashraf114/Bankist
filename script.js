@@ -10,6 +10,7 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+  type: 'premium',
 };
 
 const account2 = {
@@ -17,6 +18,7 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+  type: 'premium',
 };
 
 const account3 = {
@@ -24,6 +26,7 @@ const account3 = {
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
+  type: 'standard',
 };
 
 const account4 = {
@@ -31,6 +34,7 @@ const account4 = {
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
+  type: 'basic',
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -73,7 +77,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     
     `;
@@ -85,19 +89,19 @@ const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce(function (acc, mov) {
     return (acc += mov);
   });
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummery = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   // ternary to
   const interest = acc.movements
@@ -108,7 +112,7 @@ const calcDisplaySummery = function (acc) {
       return int > 1;
     })
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -178,7 +182,7 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     currentAccount.movements.push(amount);
     updateUI(currentAccount);
@@ -601,18 +605,144 @@ const swimmingAdjacent = [
 
 // Strings
 const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
-console.log(owners.sort());
-console.log(owners);
+// console.log(owners.sort());
+// console.log(owners);
 // Numbers
 // return <0 a,b
 // return >0 b,a
-console.log(movements);
+// console.log(movements);
 
-console.log(
-  movements.sort((a, b) => {
-    if (a > b) return 1;
-    if (b > a) return -1;
-  })
+// console.log(
+//   movements.sort((a, b) => {
+//     if (a > b) return 1;
+//     if (b > a) return -1;
+//   })
+// );
+
+// console.log(movements);
+
+const groupedMovements = Object.groupBy(movements, movement =>
+  movement > 0 ? 'deposits' : 'withdrawals'
+);
+// console.log(groupedMovements);
+
+const groupedByAcivity = Object.groupBy(accounts, account => {
+  const movementCount = account.movements.length;
+  if (movementCount >= 8) return 'very active';
+  if (movementCount >= 4) return 'active';
+  if (movementCount >= 1) return 'moderate';
+  if (movementCount >= 0) return 'inactive';
+});
+// console.log(groupedByAcivity);
+
+// const groupedAccounts = Object.groupBy(accounts, account => account.type);
+
+const groupedAccounts = Object.groupBy(accounts, ({ type }) => type);
+// console.log(groupedAccounts);
+
+const x = new Array(7);
+x.fill(22, 1, 3);
+x.fill(45, 0, 1);
+x.fill(634565, 3);
+
+// console.log(x);
+// console.log(x.map(() => 5));
+
+// array.from
+const y = Array.from({ length: 7 }, () => 1);
+// console.log(y);
+
+const z = Array.from({ length: 7 }, (_, i) => i + 1);
+// console.log(z);
+
+const random = Array.from(
+  { length: 100 },
+  () => Math.floor(Math.random() * 100) + 1
 );
 
-console.log(movements);
+// labelWelcome.addEventListener('click', function () {
+//   const movementsUI = Array.from(
+//     document.querySelectorAll('.movements__value')
+//   );
+//   console.log(movementsUI.map(el => Number(el.textContent.replace('€', ''))));
+// });
+
+labelWelcome.addEventListener('click', function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => +el.textContent.replace('€', '')
+  );
+  // console.log(movementsUI);
+});
+//destructive
+// const reversedMov = movements.reverse();
+const reversedMov = movements.toReversed();
+// movements[1] = 2000;
+const newMovements = movements.with(1, 2000);
+// console.log(newMovements);
+// console.log(movements);
+// console.log(reversedMov);
+// 1.
+const bankDepositsSum = accounts.flatMap(acc => acc.movements);
+// .filter(mov => mov > 0);
+// .reduce((acc, mov) => acc + mov, 0);
+// console.log(bankDepositsSum);
+
+// 2. how many deposits within the bank with atleast 1000
+// filter or every
+// console.log(bankDepositsSum.filter(mov => mov >= 1000).length);
+// console.log(
+//   bankDepositsSum.reduce(
+//     (count, cur, i, arr) => (cur >= 1000 ? ++count : count),
+//     0
+//   )
+// );
+// ++ does increment but it returns the old value
+//prefixed ++x
+
+// 3. create a new object by reduce
+
+const { adeposits, awithdrawals } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    function (sums, cur) {
+      // cur > 0 ? (sums.adeposits += cur) : (sums.awithdrawals += cur);
+      sums[cur > 0 ? 'adeposits' : 'awithdrawals'] += cur;
+      return sums;
+    },
+
+    { adeposits: 0, awithdrawals: 0 }
+  );
+// console.log(adeposits, awithdrawals);
+
+// 4. Title Case
+
+const convertTitleCase = function (title) {
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+
+  const exceptions = [
+    'and',
+    'a',
+    'an',
+    'and',
+    'the',
+    'but',
+    'or',
+    'on',
+    'in',
+    'with',
+  ];
+
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word =>
+      exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)
+    )
+    .join(' ');
+
+  return capitalize(titleCase);
+};
+// console.log(convertTitleCase('this is a nice title'));
+// console.log(convertTitleCase('this is a LONG title but not too long'));
+// console.log(convertTitleCase('and here is another title with an EXAMPLE'));
