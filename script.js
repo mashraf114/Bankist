@@ -21,8 +21,8 @@ const account1 = {
     '2026-02-05T16:33:06.386Z',
     '2026-03-21T14:43:26.374Z',
 
-    '2026-03-25T18:49:59.371Z',
-    '2026-03-26T12:01:20.894Z',
+    '2026-04-02T18:49:59.371Z',
+    '2026-04-03T12:01:20.894Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -92,7 +92,7 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const formatMovementDate = function (date) {
+const formatMovementDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
   const daysPassed = calcDaysPassed(new Date(), date);
@@ -102,11 +102,20 @@ const formatMovementDate = function (date) {
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
 
-  const day = `${date.getDay()}`.padStart(2, 0);
-  const month = `${date.getMonth() + 1}`.padStart(2, 0);
-  const year = date.getFullYear();
+  // const day = `${date.getDay()}`.padStart(2, 0);
+  // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  // const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
+  // return `${day}/${month}/${year}`;
+
+  return new Intl.DateTimeFormat(locale).format(date);
+};
+
+const formatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
 };
 
 const displayMovements = function (acc, sort = false) {
@@ -116,7 +125,7 @@ const displayMovements = function (acc, sort = false) {
     movement: mov,
     movementDate: acc.movementsDates.at(i),
   }));
-  console.log(...combinedMovsDates);
+  // console.log(...combinedMovsDates);
   if (sort) combinedMovsDates.sort((a, b) => a.movement - b.movement);
 
   // const movs = sort
@@ -128,7 +137,8 @@ const displayMovements = function (acc, sort = false) {
     const type = movement > 0 ? 'deposit' : 'withdrawal';
 
     const date = new Date(movementDate);
-    const displayDate = formatMovementDate(date);
+    const displayDate = formatMovementDate(date, acc.locale);
+    const formattedMovement = formatCur(movement, acc.locale, acc.currency);
 
     const html = `
      <div class="movements__row">
@@ -136,7 +146,7 @@ const displayMovements = function (acc, sort = false) {
       i + 1
     } ${type}</div>
         <div class="movements__date">${displayDate}</div>
-        <div class="movements__value">${movement.toFixed(2)}€</div>
+        <div class="movements__value">${formattedMovement}</div>
       </div>
     
     `;
@@ -145,22 +155,30 @@ const displayMovements = function (acc, sort = false) {
 };
 
 const calcDisplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce(function (acc, mov) {
-    return (acc += mov);
-  });
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  acc.balance = acc.movements.reduce((acc, mov) => (acc += mov), 0);
+
+  console.log('-->', acc.balance, acc.locale, acc.currency);
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
+
+// const calcDisplayBalance = function (acc) {
+//   acc.balance = acc.movements.reduce(function (acc, mov) {
+//     return (acc += mov);
+//   });
+
+//   labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+// };
 
 const calcDisplaySummery = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCur(Math.abs(out), acc.locale, acc.currency);
 
   // ternary to
   const interest = acc.movements
@@ -171,7 +189,7 @@ const calcDisplaySummery = function (acc) {
       return int > 1;
     })
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
 };
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -212,12 +230,28 @@ btnLogin.addEventListener('click', function (e) {
     containerApp.style.opacity = 100;
 
     const now = new Date();
-    const day = `${now.getDay()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    const year = now.getFullYear();
-    const minutes = `${now.getMinutes()}`.padStart(2, 0);
-    const hour = `${now.getHours()}`.padStart(2, 0);
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
+    // experimenting API
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      // weekday: 'long',
+    };
+
+    const locale = navigator.language;
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
+
+    // const day = `${now.getDay()}`.padStart(2, 0);
+    // const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    // const year = now.getFullYear();
+    // const minutes = `${now.getMinutes()}`.padStart(2, 0);
+    // const hour = `${now.getHours()}`.padStart(2, 0);
+    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
 
     // clear Input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -856,4 +890,21 @@ const calcDaysPassed = (date1, date2) =>
   Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
 
 const days1 = calcDaysPassed(new Date(2037, 3, 4), new Date(2037, 3, 14));
-console.log(days1);
+// console.log(days1);
+
+const num = 25451451.34;
+
+const optins = {
+  style: 'currency',
+  unit: 'celsius',
+  currency: 'EUR',
+  // useGrouping: false,
+};
+
+console.log('US: ', new Intl.NumberFormat('en-US', optins).format(num));
+console.log('Ger: ', new Intl.NumberFormat('de-DE', optins).format(num));
+console.log('Syria: ', new Intl.NumberFormat('ar-SY', optins).format(num));
+console.log(
+  navigator.language,
+  new Intl.NumberFormat(navigator.language).format(num)
+);
