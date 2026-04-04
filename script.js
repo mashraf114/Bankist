@@ -96,7 +96,7 @@ const formatMovementDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
   const daysPassed = calcDaysPassed(new Date(), date);
-  console.log(daysPassed);
+  // console.log(daysPassed);
 
   if (daysPassed === 0) return 'Today';
   if (daysPassed === 1) return 'Yesterday';
@@ -157,17 +157,8 @@ const displayMovements = function (acc, sort = false) {
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => (acc += mov), 0);
 
-  console.log('-->', acc.balance, acc.locale, acc.currency);
   labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
-
-// const calcDisplayBalance = function (acc) {
-//   acc.balance = acc.movements.reduce(function (acc, mov) {
-//     return (acc += mov);
-//   });
-
-//   labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
-// };
 
 const calcDisplaySummery = function (acc) {
   const incomes = acc.movements
@@ -208,13 +199,41 @@ const updateUI = function (acc) {
   calcDisplaySummery(acc);
 };
 
+const startLogOutTimer = function () {
+  const tick = function () {
+    // in each call print remainging time to UI
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = time % 60;
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // when 0 seconds, stop timer and  log out user
+
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+
+    time--;
+  };
+
+  // set time to 5 minutes
+  let time = 120;
+  // call the timer every second
+  tick();
+
+  const timer = setInterval(tick, 1000);
+
+  return timer;
+};
+
 // event handlers
-let currentAccount;
+let currentAccount, timer;
 
 // Fake always logged in
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
@@ -256,6 +275,10 @@ btnLogin.addEventListener('click', function (e) {
     // clear Input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginUsername.blur();
+
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
+
     inputLoginPin.blur();
     updateUI(currentAccount);
   }
@@ -296,12 +319,14 @@ btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    currentAccount.movements.push(amount);
+    setTimeout(function () {
+      currentAccount.movements.push(amount);
 
-    // add transfer.date
-    currentAccount.movementsDates.push(new Date().toISOString());
+      // add transfer.date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    updateUI(currentAccount);
+      updateUI(currentAccount);
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -884,7 +909,7 @@ labelWelcome.addEventListener('click', function (e) {
 
 // Working with dates
 const future = new Date(2037, 10, 19, 15, 23);
-console.log(future);
+// console.log(future);
 
 const calcDaysPassed = (date1, date2) =>
   Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
@@ -900,11 +925,18 @@ const optins = {
   currency: 'EUR',
   // useGrouping: false,
 };
+// const ingred = ['olives', 'spinach'];
+// const pizzaTimer = setTimeout(
+//   (ing1, ing2) => console.log(`here's ur pizza with ${ing1}, ${ing2}`),
+//   3000,
+//   ...ingred
+// );
+// console.log('waiting');
+// if (ingred.includes('olive')) clearTimeout(pizzaTimer);
 
-console.log('US: ', new Intl.NumberFormat('en-US', optins).format(num));
-console.log('Ger: ', new Intl.NumberFormat('de-DE', optins).format(num));
-console.log('Syria: ', new Intl.NumberFormat('ar-SY', optins).format(num));
-console.log(
-  navigator.language,
-  new Intl.NumberFormat(navigator.language).format(num)
-);
+// set intervals
+
+// setInterval(function () {
+//   const now = new Date();
+// console.log(now);
+// }, 3000);
