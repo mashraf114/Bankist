@@ -534,23 +534,23 @@ GOOD LUCK 😀
 */
 const ages = [5, 2, 4, 1, 15, 8, 3];
 
-// const calcAverageHumanAges = function (arr) {
-//   return arr
-//     .map(function (dogAge) {
-//       let humanAge = 0;
-//       if (dogAge <= 2) {
-//         humanAge = 2 * dogAge;
-//       } else humanAge = 16 + dogAge * 4;
-//       return humanAge;
-//     })
-//     .filter(function (dogAge) {
-//       return dogAge > 18;
-//     })
-//     .reduce(function (acc, cur) {
-//       acc += cur;
-//       return acc / arr.length;
-//     });
-// };
+const calcAverageHumanAges = function (arr) {
+  return arr
+    .map(function (dogAge) {
+      let humanAge = 0;
+      if (dogAge <= 2) {
+        humanAge = 2 * dogAge;
+      } else humanAge = 16 + dogAge * 4;
+      return humanAge;
+    })
+    .filter(function (dogAge) {
+      return dogAge > 18;
+    })
+    .reduce(function (acc, cur) {
+      acc += cur;
+      return acc / arr.length;
+    });
+};
 
 // console.log(calcAverageHumanAges(ages));
 
@@ -931,18 +931,18 @@ const optins = {
   currency: 'EUR',
   // useGrouping: false,
 };
-// const ingred = ['olives', 'spinach'];
-// const pizzaTimer = setTimeout(
-//   (ing1, ing2) => console.log(`here's ur pizza with ${ing1}, ${ing2}`),
-//   3000,
-//   ...ingred
-// );
+const ingred = ['olives', 'spinach'];
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => console.log(`here's ur pizza with ${ing1}, ${ing2}`),
+  3000,
+  ...ingred
+);
 // console.log('waiting');
-// if (ingred.includes('olive')) clearTimeout(pizzaTimer);
+if (ingred.includes('olive')) clearTimeout(pizzaTimer);
 
 // set intervals
 
-// setInterval(function () {
-//   const now = new Date();
-// console.log(now);
-// }, 3000);
+setInterval(function () {
+  const now = new Date();
+  // console.log(now);
+}, 3000);
