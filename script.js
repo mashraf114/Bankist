@@ -310,9 +310,11 @@ btnTransfer.addEventListener('click', function (e) {
     recieverAcc.movementsDates.push(new Date().toISOString());
 
     updateUI(currentAccount);
-  } else {
-    console.log('Transfer invalid!');
   }
+
+  // reset the timer
+  clearInterval(timer);
+  timer = startLogOutTimer();
 });
 
 btnLoan.addEventListener('click', function (e) {
@@ -329,6 +331,10 @@ btnLoan.addEventListener('click', function (e) {
     }, 2500);
   }
   inputLoanAmount.value = '';
+
+  // reset the timer
+  clearInterval(timer);
+  timer = startLogOutTimer();
 });
 
 btnClose.addEventListener('click', function (e) {
