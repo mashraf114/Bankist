@@ -1,129 +1,85 @@
-# 💳 Bankist App
+# 💰 Bankist – Minimal Banking App
 
-A modern banking web application built as part of **The Complete JavaScript Course** by Jonas Schmedtmann.
+Bankist simulates core banking operations such as logging in, transferring money, requesting loans, and closing accounts — all handled in the browser using modern JavaScript.
 
-This project demonstrates core **JavaScript fundamentals**, **DOM manipulation**, and **modern ES6+ concepts** through a real-world banking interface simulation.
+## 🚀 Features
 
----
+- 🔐 User authentication (login with username & PIN)  
+- 💸 Transfer money between accounts  
+- 🏦 Request loans (based on deposit conditions)  
+- ❌ Close account  
+- 📊 Display transaction history (movements)  
+- 🔽 Sort transactions  
+- ⏳ Automatic logout timer for security  
+- 💱 Display formatted dates and currency  
 
-## 🚀 Live Demo
+## 🧠 Concepts Learned
 
-👉 **[View Live Project](https://mashraf114.github.io/Bankist/)**
+This project focuses on strengthening JavaScript fundamentals, including:
 
----
-
-## 📌 Project Overview
-
-**Bankist** is a fictional online banking application that allows users to:
-
-- Login using demo accounts
-- View transaction history
-- Transfer money between accounts
-- Request loans
-- Close accounts
-- Automatically logout after inactivity
-- Sort transactions dynamically
-
-The goal of the project is to practice **real application logic** using vanilla JavaScript without frameworks.
-
----
+- Arrays and array methods (`map`, `filter`, `reduce`, `find`)  
+- DOM manipulation and event handling  
+- Timers (`setTimeout`, `setInterval`)  
+- Internationalization API (`Intl.DateTimeFormat`, `Intl.NumberFormat`)  
+- Working with dates in JavaScript  
+- Clean and structured code practices  
 
 ## 🛠️ Technologies Used
 
-- HTML5
-- CSS3
-- JavaScript (ES6+)
-- DOM Manipulation
-- Event Handling
-- Array Methods (`map`, `filter`, `reduce`)
-- Timers & Dates API
+- HTML5  
+- CSS3  
+- JavaScript (ES6+)  
 
----
+## 🔑 Demo Accounts
 
-## 🎯 Learning Objectives
+Use the following accounts to test the app:
 
-This project focuses on:
+| User        | Username | PIN  |
+|------------|---------|------|
+| Jonas      | `js`    | `1111` |
+| Jessica    | `jd`    | `2222` |
 
-- Writing clean JavaScript code
-- Working with application state
-- Handling user interactions
-- Data transformation using array methods
-- Building UI updates dynamically
-- Structuring real-world frontend logic
+## 📦 Installation
 
----
+1. Clone the repository:
 
-## 🔐 Demo Accounts
+   ```bash
+   git clone https://github.com/your-username/bankist.git
+   ```
 
-Use any of the following demo users:
+2. Navigate to the project folder:
 
-| User | PIN  |
-| ---- | ---- |
-| js   | 1111 |
-| jd   | 2222 |
+   ```bash
+   cd bankist
+   ```
 
-_(Adjust if your version uses different accounts)_
+3. Open `index.html` in your browser.
 
----
+> 💡 Tip: Use a live server (e.g., VS Code Live Server extension) for best experience.
 
-## 📂 Project Structure
+## 📁 Project Structure
 
+```
 bankist/
-│
-├── index.html
-├── style.css
-├── script.js
-└── README.md
+│── index.html
+│── style.css
+│── script.js
+```
 
----
+## ⚠️ Known Limitations
 
-## 🧠 What I Practiced
+- No backend — all data is stored in-memory and resets on reload  
+- No real authentication or encryption (for demo purposes only)  
+- Loan approval logic is simplified  
+- Not fully responsive on all screen sizes  
 
-- Advanced JavaScript concepts
-- Event-driven programming
-- Application flow design
-- UI rendering logic
-- Code organization and readability
+## 🔮 Future Improvements
 
----
+- Add backend integration (database & authentication)  
+- Add transaction categories and analytics  
+- Implement persistent storage  
+- Enhance security features  
 
-## 📸 Screenshots
+## 🙌 Acknowledgements
 
-To be added
-
----
-
-## 🌐 Deployment
-
-The project is hosted using **GitHub Pages**.
-
-To deploy:
-
-1. Push project to GitHub
-2. Go to Repository → Settings → Pages
-3. Select branch
-4. Save
-
----
-
-## 🙋‍♂️ Author
-
-**Mohamed Ashraf**  
-Full Stack Developer
-
-- GitHub: https://github.com/mashraf114
-- LinkedIn: https://www.linkedin.com/in/mashraf114/
-
----
-
-## 📚 Course Credit
-
-Project completed during:
-
-**The Complete JavaScript Course** by Jonas Schmedtmann
-
----
-
-## ⭐ Acknowledgment
-
-This project is for **educational purposes only** and inspired by course material.
+This project is part of the JavaScript course by Jonas Schmedtmann.
